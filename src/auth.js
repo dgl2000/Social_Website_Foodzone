@@ -6,7 +6,7 @@ const userSchema = require('./userSchema');
 const User = mongoose.model('user', userSchema);
 const profileSchema = require('./profileSchema');
 const Profile = mongoose.model('profile', profileSchema);
-const connectionString = 'mongodb+srv://imgloriadai:531531666@cluster-gd25.4lsleoq.mongodb.net/foodZone?retryWrites=true&w=majority';
+const connectionString = 'mongodb+srv://imgloriadai:531531666@cluster-gd25.4lsleoq.mongodb.net/?retryWrites=true&w=majority';
 
 function isLoggedIn(req, res, next) {
     // likely didn't install cookie parser
@@ -29,7 +29,7 @@ function isLoggedIn(req, res, next) {
         next();
     }
     else {
-        return res.sendStatus(401);
+        return res.sendStatus(401)
     }
 }
 
@@ -47,23 +47,19 @@ function login(req, res) {
         await (connector.then(() => {
             User.findOne({ username: username }, function (err, doc) {
                 if (err) {
-                    return console.error(err);
+                    res.sendStatus(401);
                 } else {
-                    if (!doc) {
-                        res.sendStatus(401);
+                    let hash = md5(doc.salt + password);
+                    if (doc.hash === hash) {
+                        let mySecretMessage = "ilovedebugging";
+                        const sessionKey = md5(mySecretMessage + new Date().getTime() + doc.username);
+                        sessionUser[sessionKey] = doc.username;
+                        // Adding cookie for session id
+                        res.cookie(cookieKey, sessionKey, { maxAge: 3600 * 1000, httpOnly: true, sameSite: 'None', secure: true })
+                        let msg = { username: doc.username, result: 'success' };
+                        res.send(msg);
                     } else {
-                        let hash = md5(doc.salt + password);
-                        if (doc.hash === hash) {
-                            let mySecretMessage = "ilovedebugging";
-                            const sessionKey = md5(mySecretMessage + new Date().getTime() + doc.username);
-                            sessionUser[sessionKey] = doc.username;
-                            // Adding cookie for session id
-                            res.cookie(cookieKey, sessionKey, { maxAge: 3600 * 1000, httpOnly: true, sameSite: 'None', secure: true })
-                            let msg = { username: doc.username, result: 'success' };
-                            res.send(msg);
-                        } else {
-                            res.sendStatus(401);
-                        }
+                        res.sendStatus(401);
                     }
                 }
             })
@@ -96,11 +92,10 @@ function register(req, res) {
                 username: username,
                 hash: hash,
                 salt: salt,
-                created: Date.now(),
-                auth: [{ 'google': '' }]
+                created: Date.now()
             }).save(function (err, doc) {
                 if (err) {
-                    return console.error(err);
+                    res.sendStatus(401);
                 } else {
                     console.log(doc);
                 }
@@ -116,7 +111,7 @@ function register(req, res) {
                 avatar: "",
             }).save(function (err, doc) {
                 if (err) {
-                    return console.error(err);
+                    res.sendStatus(401);
                 } else {
                     console.log(doc);
                 }
@@ -135,20 +130,9 @@ function logout(req, res) {
     res.sendStatus(200);
 }
 
-function googleAuth(req, res) {
-    let mySecretMessage = "ilovedebugging";
-    const sessionKey = md5(mySecretMessage + new Date().getTime() + req.user.username);
-    sessionUser[sessionKey] = req.user.username;
-    // Adding cookie for session id
-    res.cookie(cookieKey, sessionKey, { maxAge: 3600 * 1000, httpOnly: true, sameSite: 'None', secure: true })
-
-    res.redirect('https://finalfoodzone-gd25.surge.sh/main');
-}
-
 module.exports = (app) => {
-    app.get('/authGoogle', googleAuth);
     app.post('/login', login);
     app.post('/register', register);
-    app.use(isLoggedIn);
     app.put('/logout', logout);
+    app.use(isLoggedIn);
 }

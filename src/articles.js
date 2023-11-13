@@ -2,28 +2,21 @@
 const mongoose = require('mongoose');
 const articleSchema = require('./articleSchema');
 const Article = mongoose.model('article', articleSchema);
-const profileSchema = require('./profileSchema');
-const Profile = mongoose.model('profile', profileSchema);
-const uploadImage = require('./uploadCloudinary');
-const connectionString = 'mongodb+srv://imgloriadai:531531666@cluster-gd25.4lsleoq.mongodb.net/foodZone?retryWrites=true&w=majority';
+const connectionString = 'mongodb+srv://imgloriadai:531531666@cluster-gd25.4lsleoq.mongodb.net/?retryWrites=true&w=majority';
 const connector = mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const updateArticle = (req, res) => {
+
     if ('commentId' in req.body) {
         if (req.body.commentId === '-1') {
             const insertArticle = async () => {
                 await (connector.then(() => {
-                    let newComment = { author: req.username, text: req.body.text, date: new Date() };
-                    Article.findOneAndUpdate({ pid: req.params.id }, { $push: { comments: newComment } }, { new: true },
+                    Article.findOneAndUpdate({ pid: req.params.id }, { $push: { comments: req.body.text } }, { new: true },
                         function (err, doc) {
                             if (err) {
-                                return console.error(err);
+                                res.sendStatus(401);
                             } else {
-                                if (!doc) {
-                                    res.sendStatus(401);
-                                } else {
-                                    res.send({ articles: doc });
-                                }
+                                res.send({ articles: doc });
                             }
                         }
                     );
@@ -35,17 +28,13 @@ const updateArticle = (req, res) => {
         } else {
             const insertArticle = async () => {
                 await (connector.then(() => {
-                    let fieldComment = 'comments.' + req.body.commentId + '.text';
+                    let fieldComment = 'comments.' + req.body.commentId;
                     Article.findOneAndUpdate({ pid: req.params.id }, { $set: { [fieldComment]: req.body.text } }, { new: true },
                         function (err, doc) {
                             if (err) {
-                                return console.error(err);
+                                res.sendStatus(401);
                             } else {
-                                if (!doc) {
-                                    res.sendStatus(401);
-                                } else {
-                                    res.send({ articles: doc });
-                                }
+                                res.send({ articles: doc });
                             }
                         }
                     );
@@ -60,13 +49,9 @@ const updateArticle = (req, res) => {
                 Article.findOneAndUpdate({ pid: req.params.id, username: req.username }, { $set: { text: req.body.text } }, { new: true },
                     function (err, doc) {
                         if (err) {
-                            return console.error(err);
+                            res.sendStatus(401);
                         } else {
-                            if (!doc) {
-                                res.sendStatus(401);
-                            } else {
-                                res.send({ articles: doc });
-                            }
+                            res.send({ articles: doc });
                         }
                     }
                 );
@@ -85,13 +70,9 @@ const getArticles = (req, res) => {
                 await (connector.then(() => {
                     Article.find({ pid: Number(req.params.id) }, function (err, doc) {
                         if (err) {
-                            return console.error(err);
+                            res.sendStatus(401);
                         } else {
-                            if (!doc) {
-                                res.sendStatus(401);
-                            } else {
-                                res.send({ articles: doc });
-                            }
+                            res.send({ articles: doc });
                         }
                     });
 
@@ -99,66 +80,30 @@ const getArticles = (req, res) => {
             }
             getArticleByUsername();
         } else {
-            const getArticlesByAuthor = async () => {
+            const getArticlesById = async () => {
                 await (connector.then(() => {
-                    Profile.findOne({ username: req.params.id }, function (err, doc) {
+                    Article.find({ author: req.params.id }, function (err, doc) {
                         if (err) {
-                            return console.error(err);
+                            res.sendStatus(401);
                         } else {
-                            if (!doc) {
-                                res.sendStatus(401);
-                            } else {
-                                let followArr = doc.following;
-                                followArr.push(req.params.i);
-                                await(connector.then(() => {
-                                    Article.find({ author: { $in: followArr } }, function (err, doc) {
-                                        if (err) {
-                                            return console.error(err);
-                                        } else {
-                                            if (!doc) {
-                                                res.sendStatus(401);
-                                            } else {
-                                                res.send({ articles: doc });
-                                            }
-                                        }
-                                    });
-
-                                }));
-                            }
+                            res.send({ articles: doc });
                         }
                     });
 
                 }));
             }
-            getArticlesByAuthor();
+            getArticlesById();
         }
     } else {
         const getLoggedInUserArticles = async () => {
             await (connector.then(() => {
-                Profile.findOne({ username: req.username }, function (err, doc) {
+                Article.find({ author: req.username }, function (err, doc) {
                     if (err) {
-                        return console.error(err);
+                        res.sendStatus(401);
                     } else {
-                        if (!doc) {
-                            res.sendStatus(401);
-                        } else {
-                            let followArr = doc.following;
-                            followArr.push(req.username);
-                            Article.find({ author: { $in: followArr } }, function (err, doc) {
-                                if (err) {
-                                    return console.error(err);
-                                } else {
-                                    if (!doc) {
-                                        res.sendStatus(401);
-                                    } else {
-                                        res.send({ articles: doc });
-                                    }
-                                }
-                            }).sort({ 'date': -1 });
-                        }
+                        res.send({ articles: doc });
                     }
                 });
-
             }));
         }
         getLoggedInUserArticles();
@@ -174,7 +119,7 @@ const addArticle = (req, res) => {
         await (connector.then(() => {
             Article.findOne({}, function (err, doc) {
                 if (err) {
-                    return console.error(err);
+                    res.sendStatus(401);
                 } else {
                     if (doc === null || doc.length === 0) {
                         pid = 0;
@@ -186,21 +131,17 @@ const addArticle = (req, res) => {
                         author: req.username,
                         text: post,
                         date: Date.now(),
-                        comments: [],
-                        imageUrl: req.fileurl
+                        comments: []
                     }).save(function (err, doc) {
                         if (err) {
-                            return console.error(err);
+                            res.sendStatus(401);
                         } else {
+                            console.log(doc);
                             Article.find({ author: req.username }, function (err, doc) {
                                 if (err) {
-                                    return console.error(err);
+                                    res.sendStatus(401);
                                 } else {
-                                    if (!doc) {
-                                        res.sendStatus(401);
-                                    } else {
-                                        res.send({ articles: doc });
-                                    }
+                                    res.send({ articles: doc });
                                 }
                             });
                         }
@@ -215,5 +156,5 @@ const addArticle = (req, res) => {
 module.exports = (app) => {
     app.get('/articles/:id?', getArticles);
     app.put('/articles/:id', updateArticle);
-    app.post('/article', uploadImage('article'), addArticle);
+    app.post('/article', addArticle);
 }

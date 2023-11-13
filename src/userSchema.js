@@ -11,11 +11,7 @@ const userSchema = new mongoose.Schema({
   },
   salt: {
     type: String,
-    required: [true, 'Salt is required']
-  },
-  auth: {
-    type: Array,
-    required: [true, 'Auth is required']
+    required: [true, 'Sale is optional']
   },
   created: {
     type: Date,

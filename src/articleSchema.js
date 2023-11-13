@@ -20,12 +20,8 @@ const articleSchema = new mongoose.Schema({
     },
     comments: {
         type: Array,
-        required: [false, 'Comments is not required']
+        required: [false, 'Comments is required']
     },
-    imageUrl: {
-        type: String,
-        required: [false, 'String is not required']
-    }
 })
 
 module.exports = articleSchema;

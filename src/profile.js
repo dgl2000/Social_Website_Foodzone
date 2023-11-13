@@ -2,10 +2,9 @@ const mongoose = require('mongoose');
 const profileSchema = require('./profileSchema');
 const Profile = mongoose.model('profile', profileSchema);
 const userSchema = require('./userSchema');
-const uploadImage = require('./uploadCloudinary');
 const User = mongoose.model('user', userSchema);
 const md5 = require('md5');
-const connectionString = 'mongodb+srv://imgloriadai:531531666@cluster-gd25.4lsleoq.mongodb.net/foodZone?retryWrites=true&w=majority';
+const connectionString = 'mongodb+srv://imgloriadai:531531666@cluster-gd25.4lsleoq.mongodb.net/?retryWrites=true&w=majority';
 const connector = mongoose.connect(connectionString, { useNewUrlParser: true, useUnifiedTopology: true });
 
 const updateHeadline = (req, res) => {
@@ -15,13 +14,10 @@ const updateHeadline = (req, res) => {
             Profile.findOneAndUpdate({ username: req.username }, { "$set": { headline: req.body.headline } }, { new: true },
                 function (err, doc) {
                     if (err) {
-                        return console.error(err);
+                        res.sendStatus(401);
                     } else {
-                        if (!doc) {
-                            res.sendStatus(401);
-                        } else {
-                            res.send({ username: doc.username, headline: doc.headline });
-                        }
+                        console.log(doc);
+                        res.send({ username: doc.username, headline: doc.headline });
                     }
                 }
             );
@@ -37,13 +33,9 @@ const getHeadline = (req, res) => {
             await (connector.then(() => {
                 Profile.findOne({ username: req.params.user }, function (err, doc) {
                     if (err) {
-                        return console.error(err);
+                        res.sendStatus(401);
                     } else {
-                        if (!doc) {
-                            res.sendStatus(401);
-                        } else {
-                            res.send({ username: doc.username, headline: doc.headline });
-                        }
+                        res.send({ username: doc.username, headline: doc.headline });
                     }
                 });
 
@@ -55,13 +47,9 @@ const getHeadline = (req, res) => {
             await (connector.then(() => {
                 Profile.findOne({ username: req.username }, function (err, doc) {
                     if (err) {
-                        return console.error(err);
+                        res.sendStatus(401);
                     } else {
-                        if (!doc) {
-                            res.sendStatus(401);
-                        } else {
-                            res.send({ username: doc.username, headline: doc.headline });
-                        }
+                        res.send({ username: doc.username, headline: doc.headline });
                     }
                 });
 
@@ -78,13 +66,9 @@ const getEmail = (req, res) => {
             await (connector.then(() => {
                 Profile.findOne({ username: req.params.user }, function (err, doc) {
                     if (err) {
-                        return console.error(err);
+                        res.sendStatus(401);
                     } else {
-                        if (!doc) {
-                            res.sendStatus(401);
-                        } else {
-                            res.send({ username: doc.username, email: doc.email });
-                        }
+                        res.send({ username: doc.username, email: doc.email });
                     }
                 });
 
@@ -96,13 +80,9 @@ const getEmail = (req, res) => {
             await (connector.then(() => {
                 Profile.findOne({ username: req.username }, function (err, doc) {
                     if (err) {
-                        return console.error(err);
+                        res.sendStatus(401);
                     } else {
-                        if (!doc) {
-                            res.sendStatus(401);
-                        } else {
-                            res.send({ username: doc.username, email: doc.email });
-                        }
+                        res.send({ username: doc.username, email: doc.email });
                     }
                 });
 
@@ -118,13 +98,9 @@ const updateEmail = (req, res) => {
             Profile.findOneAndUpdate({ username: req.username }, { $set: { email: req.body.email } }, { new: true },
                 function (err, doc) {
                     if (err) {
-                        return console.error(err);
+                        res.sendStatus(401);
                     } else {
-                        if (!doc) {
-                            res.sendStatus(401);
-                        } else {
-                            res.send({ username: doc.username, email: doc.email });
-                        }
+                        res.send({ username: doc.username, email: doc.email });
                     }
                 }
             );
@@ -140,13 +116,9 @@ const getZipcode = (req, res) => {
             await (connector.then(() => {
                 Profile.findOne({ username: req.params.user }, function (err, doc) {
                     if (err) {
-                        return console.error(err);
+                        res.sendStatus(401);
                     } else {
-                        if (!doc) {
-                            res.sendStatus(401);
-                        } else {
-                            res.send({ username: doc.username, zipcode: doc.zipcode });
-                        }
+                        res.send({ username: doc.username, zipcode: doc.zipcode });
                     }
                 });
             }));
@@ -157,13 +129,9 @@ const getZipcode = (req, res) => {
             await (connector.then(() => {
                 Profile.findOne({ username: req.username }, function (err, doc) {
                     if (err) {
-                        return console.error(err);
+                        res.sendStatus(401);
                     } else {
-                        if (!doc) {
-                            res.sendStatus(401);
-                        } else {
-                            res.send({ username: doc.username, zipcode: doc.zipcode });
-                        }
+                        res.send({ username: doc.username, zipcode: doc.zipcode });
                     }
                 });
             }));
@@ -178,13 +146,9 @@ const updateZipcode = (req, res) => {
             Profile.findOneAndUpdate({ username: req.username }, { $set: { zipcode: req.body.zipcode } }, { new: true },
                 function (err, doc) {
                     if (err) {
-                        return console.error(err);
+                        res.sendStatus(401);
                     } else {
-                        if (!doc) {
-                            res.sendStatus(401);
-                        } else {
-                            res.send({ username: doc.username, zipcode: doc.zipcode });
-                        }
+                        res.send({ username: doc.username, zipcode: doc.zipcode });
                     }
                 }
             );
@@ -200,13 +164,9 @@ const getDob = (req, res) => {
             await (connector.then(() => {
                 Profile.findOne({ username: req.params.user }, function (err, doc) {
                     if (err) {
-                        return console.error(err);
+                        res.sendStatus(401);
                     } else {
-                        if (!doc) {
-                            res.sendStatus(401);
-                        } else {
-                            res.send({ username: doc.username, dob: doc.dob });
-                        }
+                        res.send({ username: doc.username, dob: doc.dob });
                     }
                 });
             }));
@@ -217,13 +177,9 @@ const getDob = (req, res) => {
             await (connector.then(() => {
                 Profile.findOne({ username: req.username }, function (err, doc) {
                     if (err) {
-                        return console.error(err);
+                        res.sendStatus(401);
                     } else {
-                        if (!doc) {
-                            res.sendStatus(401);
-                        } else {
-                            res.send({ username: doc.username, dob: doc.dob });
-                        }
+                        res.send({ username: doc.username, dob: doc.dob });
                     }
                 });
             }));
@@ -238,13 +194,9 @@ const getAvatar = (req, res) => {
             await (connector.then(() => {
                 Profile.findOne({ username: req.params.user }, function (err, doc) {
                     if (err) {
-                        return console.error(err);
+                        res.sendStatus(401);
                     } else {
-                        if (!doc) {
-                            res.sendStatus(401);
-                        } else {
-                            res.send({ username: doc.username, avatar: doc.avatar });
-                        }
+                        res.send({ username: doc.username, avatar: doc.avatar });
                     }
                 });
             }));
@@ -255,13 +207,9 @@ const getAvatar = (req, res) => {
             await (connector.then(() => {
                 Profile.findOne({ username: req.username }, function (err, doc) {
                     if (err) {
-                        return console.error(err);
+                        res.sendStatus(401);
                     } else {
-                        if (!doc) {
-                            res.sendStatus(401);
-                        } else {
-                            res.send({ username: doc.username, avatar: doc.avatar });
-                        }
+                        res.send({ username: doc.username, avatar: doc.avatar });
                     }
                 });
             }));
@@ -273,16 +221,12 @@ const getAvatar = (req, res) => {
 const updateAvatar = (req, res) => {
     const updateNewAvatar = async () => {
         await (connector.then(() => {
-            Profile.findOneAndUpdate({ username: req.username }, { $set: { avatar: req.fileurl } }, { new: true },
+            Profile.findOneAndUpdate({ username: req.username }, { $set: { avatar: req.body.avatar } }, { new: true },
                 function (err, doc) {
                     if (err) {
-                        return console.error(err);
+                        res.sendStatus(401);
                     } else {
-                        if (!doc) {
-                            res.sendStatus(401);
-                        } else {
-                            res.send({ username: doc.username, avatar: doc.avatar });
-                        }
+                        res.send({ username: doc.username, avatar: doc.avatar });
                     }
                 }
             );
@@ -300,13 +244,9 @@ const updatePassword = (req, res) => {
             User.findOneAndUpdate({ username: req.username }, { $set: { salt: salt, hash: hash } }, { new: true },
                 function (err, doc) {
                     if (err) {
-                        return console.error(err);
+                        res.sendStatus(401);
                     } else {
-                        if (!doc) {
-                            res.sendStatus(401);
-                        } else {
-                            res.send({ username: doc.username, result: 'success' });
-                        }
+                        res.send({ username: doc.username, result: 'success' });
                     }
                 }
             );
@@ -316,103 +256,15 @@ const updatePassword = (req, res) => {
     updateNewPassword();
 }
 
-const getUsername = (req, res) => {
-    res.send({ username: req.username });
-}
-
-const getFollowerHeadline = (req, res) => {
-    const getHeadlines = async () => {
-        await (connector.then(() => {
-            Profile.findOne({ username: req.username },
-                function (err, doc) {
-                    if (err) {
-                        return console.error(err);
-                    } else {
-                        if (!doc) {
-                            res.sendStatus(401);
-                        } else {
-                            let followArr = doc.following;
-
-                            let resArr = [];
-                            for (const item of followArr) {
-                                Profile.findOne({ username: item }, function (err, doc) {
-                                    if (err) {
-                                        return console.error(err);
-                                    } else {
-                                        if (!doc) {
-                                            res.sendStatus(401);
-                                        } else {
-                                            resArr.push(doc.headline);
-                                            if (resArr.length === followArr.length) {
-                                                res.send({ headline: resArr });
-                                            }
-                                        }
-                                    }
-                                })
-                            }
-                        }
-                    }
-                }
-            );
-
-        }));
-    }
-    getHeadlines();
-
-}
-
-const getFollowerAvatar = (req, res) => {
-    const getAvatars = async () => {
-        await (connector.then(() => {
-            Profile.findOne({ username: req.username },
-                function (err, doc) {
-                    if (err) {
-                        return console.error(err);
-                    } else {
-                        if (!doc) {
-                            res.sendStatus(401);
-                        } else {
-                            let followArr = doc.following;
-                            let resArr = [];
-                            for (const item of followArr) {
-                                Profile.findOne({ username: item }, function (err, doc) {
-                                    if (err) {
-                                        return console.error(err);
-                                    } else {
-                                        if (!doc) {
-                                            res.sendStatus(401);
-                                        } else {
-                                            resArr.push(doc.avatar);
-                                            if (resArr.length === followArr.length) {
-                                                res.send({ avatar: resArr });
-                                            }
-                                        }
-                                    }
-                                })
-                            }
-                        }
-                    }
-                }
-            );
-
-        }));
-    }
-    getAvatars();
-
-}
-
 module.exports = (app) => {
-    app.get('/username', getUsername);
     app.get('/headline/:user?', getHeadline);
     app.put('/headline', updateHeadline);
-    app.get('/followerHeadline', getFollowerHeadline);
-    app.get('/followerAvatar', getFollowerAvatar);
     app.get('/email/:user?', getEmail);
     app.put('/email', updateEmail);
     app.get('/zipcode/:user?', getZipcode);
     app.put('/zipcode', updateZipcode);
     app.get('/dob/:user?', getDob);
     app.get('/avatar/:user?', getAvatar);
-    app.put('/avatar', uploadImage('avatar'), updateAvatar);
+    app.put('/avatar', updateAvatar);
     app.put('/password', updatePassword);
 }

@@ -1,88 +1,73 @@
 # README
 
-@file: Rice University COMP 531 Web Development HW 7 final website backend
+@file: Rice University COMP 531 Web Development HM6 backend unit test and API
 
 @author: Gaole Dai (S01435587) :penguin:
 
 @email: gd25@rice.edu
 
-@date: Nov. 21, 2022
+@date: Nov. 6, 2022
 
-## Slip Days
+## Host Server
 
-* Use the remaining 3 days
+      "netid": "gd25",
+      "frontend": "https://newerfoodzone-gd25.surge.sh",
+      "backend": "https://newerfoodzone.herokuapp.com"
 
-## Server Host
+## Function
 
-```
-  "netid": "gd25",
-  "frontend": "https://finalfoodzone-gd25.surge.sh",
-  "backend": "https://foodzone-gd25.herokuapp.com"
-```
+- `POST /register` register new user
+- `POST /login` log in user
+- `PUT /logout` log out current logged in user
+- `GET /headline` return headline for logged in user
+- `PUT /headline` update logged in user headline
+- `GET /articles` returns articles of logged in user
+- `GET /articles/id` (where id is a valid or invalid article id)
+- `POST /article` (adding an article for logged in user returns list of articles with new article, validate list increased by one and contents of the new article)
 
-## Test Account
+## Rubrics
 
-* username: testUser
-* password: 123
-
-## Roadmap
-
-Main objectives:
-
-- [x] implement all endpoints in the api. There should be no stubs.
-- [x] generate a unified feed of articles for a user based on their followed users
-- [x] permit users to upload profile avatars and articles with pictures
-- [x] add a third-party authentication option (with account linking ) - kind of...
-- [x] add **pagination** and redis store (optional) for local account
-
-Requirements:
-
-- [x] All endpoints are fully implemented. There are no stubs.
-- [x] User feed includes articles from logged in user and their followers
-- [x] Users can add comments to articles
-- [x] Users can edit articles and comments
-- [x] Users can update their profile avatar
-- [x] Users can create articles with images and text
-- [x] Pagination and Redis store (optionally) used for local (non-3rd party) login session map
-- [x] All data is persistent to server reboots
-- [x] Third-Party Authentication Login
-
-## Check Rubrics
-
-| Criteria                                                     | Finished                           | Comments                                                     |
-| ------------------------------------------------------------ | ---------------------------------- | ------------------------------------------------------------ |
-| README.md file with test username, password, frontend and backend URLs | :white_check_mark:                 | In `Test Account` and `Server Host` sessions                 |
-| All backend functionality is present as per previous assignment | :white_check_mark:                 |                                                              |
-| Frontend: user interface and style                           | :white_check_mark:                 |                                                              |
-| Frontend: fully functional as per previous assignments       | :white_check_mark:                 |                                                              |
-| User's feed is provided by an efficient MongoDB query        | :white_check_mark:                 |                                                              |
-| User can login with third-party authentication (and link accounts) | :white_check_mark::checkered_flag: |                                                              |
-| Session is stored/retrieved from cookie                      | :white_check_mark:                 |                                                              |
-| Edit articles and comments                                   | :white_check_mark:                 | Only comments and articles belongs to the current logged in user could be modified.![](https://res.cloudinary.com/hevjiekwx/image/upload/v1670199103/image-20221204181047704_b1czpw.png) |
-|                                                              |                                    | ![](https://res.cloudinary.com/hevjiekwx/image/upload/v1670199418/image-20221204181601144_dla1jx.png) |
-|                                                              |                                    | ![image-20221204181902167](https://res.cloudinary.com/hevjiekwx/image/upload/v1670199561/image-20221204181902167_ddyjm4.png) |
-| Post article with text and image                             | :white_check_mark:                 |                                                              |
-| Update profile avatar                                        | :white_check_mark:                 | Yes, photo is uploaded to Cloudinary image host              |
-| Uploaded images are persistent to dyno reboots, i.e., use **Cloudinary** | :white_check_mark:                 | I use Cloudinary image host                                  |
-| Pagination and optionally a Redis store used for local account (non-3rd party) login sessions | :white_check_mark:                 | Pagination - **5** posts every page.                         |
-| All backend endpoints are implemented                        | :white_check_mark:                 | Yes                                                          |
-| **Demerits**                                                 | ------------                       | ------------------------------------------------------------- |
-| angular or react framework not used in frontend              | :x:                                | I use **React**                                              |
-| unapproved third party module                                | :x:                                | React + Material UI - **limited separate css file since I use Material UI framework** |
-| refreshing the page when logged in should keep the user logged in | :x:                                | NO                                                           |
-| an error occurs                                              | :x:                                | NO :white_flag:                                              |
-| lingering console message                                    | :x:                                |                                                              |
-
-## Citation
-
-* Profile Images from Pexels free images
-
-  * https://www.pexels.com/photo/woman-wearing-brown-bucket-cap-732425/
-
-  * https://www.pexels.com/photo/man-wearing-blue-crew-neck-t-shirt-2379005/
-
-  * https://www.pexels.com/photo/man-in-brown-polo-shirt-614810/
-
-  * https://www.pexels.com/photo/woman-wearing-white-shirt-with-white-flower-on-her-ear-3586798/
-
-* Post articles from https://www.fairwaycapecod.com/about-us/customer-reviews/
+| Merits                                                       |      Finished      | Comments                                                     |
+| ------------------------------------------------------------ | :----------------: | ------------------------------------------------------------ |
+| README.md file with frontend and backend URLs                | :white_check_mark: | In Host Server Session                                       |
+| Frontend: Site is hosted on Surge                            | :white_check_mark: |                                                              |
+| Frontend: Implements same requirements from last assignment  | :white_check_mark: |                                                              |
+| Backend: Site is hosted on Heroku                            | :white_check_mark: |                                                              |
+| Backend: POST /login returns a username and message          | :white_check_mark: | In windows 10 -`curl -X POST -H "Content-Type: application/json" --data "{\"username\":\"imgloriadai\", \"password\": \"123\"}" https://newerfoodzone.herokuapp.com/login` |
+| Backend: POST /register updates the list of registered users | :white_check_mark: | `curl -X POST -H "Content-Type: application/json" --data "{\"username\":\"testUser\", \"password\": \"123\", \"email\":\"testUser@rice.edu\", \"dob\":\"11/11/2002\", \"zipcode\":\"77005\"}" https://newerfoodzone.herokuapp.com/register` |
+| Backend: PUT /logout logs out user and removes session id    | :white_check_mark: | `curl -X PUT -H "Content-Type: application/json" https://newerfoodzone.herokuapp.com/logout` |
+| Backend: GET /headline/:user? returns the headline messages for requested users | :white_check_mark: |                                                              |
+| Backend: PUT /headline updates the headline message          | :white_check_mark: |                                                              |
+| Backend: GET /articles returns articles for logged in user   | :white_check_mark: | Current logged in user's articles are returned -> Mack said it is design issue, I will change with logged in user + follower in final app |
+| Backend: POST /article returns an array of articles with newly added article | :white_check_mark: | Return current logged in user's articles with the newly added one |
+| Backend: implement GET /articles and GET /articles/:id as one endpoint not two | :white_check_mark: | Yes, one endpoint                                            |
+| Backend: Stub: PUT /password                                 | :white_check_mark: | Already connect to the database, did not use stub            |
+| Backend: Stub: GET /email/:user?                             | :white_check_mark: | Already connect to the database, did not use stub            |
+| Backend: Stub: PUT /email                                    | :white_check_mark: | Already connect to the database, did not use stub            |
+| Backend: Stub: GET /zipcode/:user?                           | :white_check_mark: | Already connect to the database, did not use stub            |
+| Backend: Stub: PUT /zipcode                                  | :white_check_mark: | Already connect to the database, did not use stub            |
+| Backend: Stub: GET /avatar/:user?                            | :white_check_mark: | Already connect to the database, did not use stub            |
+| Backend: Stub: PUT /avatar                                   | :white_check_mark: | Already connect to the database, did not use stub            |
+| Backend: Stub: GET /dob                                      | :white_check_mark: | Already connect to the database, did not use stub            |
+| Backend: Stub: PUT /articles/id                              | :white_check_mark: | Already connect to the database, did not use stub            |
+| Backend: Stub: GET /following/:user?                         | :white_check_mark: | Already connect to the database, did not use stub            |
+| Backend: Stub: PUT /following/:user                          | :white_check_mark: | Already connect to the database, did not use stub            |
+| Backend: Stub: DELETE /following/:user                       | :white_check_mark: | Already connect to the database, did not use stub            |
+| Backend: MongoDB has at least three collections: users, articles, profiles | :white_check_mark: | Yes, three collections which are users, articles and profiles |
+| Backend: Session id is stored as httpOnly cookie             | :white_check_mark: | Yes, I use the code from hw6 description                     |
+| Backend: User passwords are hashed and salted using md5 or encrypted with bcrypt | :white_check_mark: | Yes, I use `md5` for hashing                                 |
+| Backend: isLoggedIn middleware is exported from auth.ts and applied to routes | :white_check_mark: | Applied one as IC in `auth.js`                               |
+| Backend: Unit test to validate POST /register                | :white_check_mark: | In `1.login.spec.js`                                         |
+| Backend: Unit test to validate POST /login                   | :white_check_mark: | In `1.login.spec.js`                                         |
+| Backend: Unit test to validate PUT /logout                   | :white_check_mark: | In `1.login.spec.js`                                         |
+| Backend: Unit test to validate GET /headline                 | :white_check_mark: | In `2.profile.spec.js`                                       |
+| Backend: Unit test to validate PUT /headline                 | :white_check_mark: | In `2.profile.spec.js`                                       |
+| Backend: Unit test to validate GET /articles                 | :white_check_mark: | In `3.article.spec.js`                                       |
+| Backend: Unit test to validate GET /articles/id              | :white_check_mark: | In `3.article.spec.js`                                       |
+| Backend: Unit test to validate POST /article                 | :white_check_mark: | In `3.article.spec.js`                                       |
+| Backend: valid junit xml test results for backend            | :white_check_mark: | Three separate file in junit-report.xml file                 |
+| **Demerits**                                                 |        ----        | ----------------------------------------------------------------------------------------------- |
+| not using Angular or React for frontend                      |        :x:         | I use **React**                                              |
+| unapproved module or JavaScript library                      |        :x:         | React + Material UI - **limited separate css file since I use Material UI framework** |
+| did not submit front-end web app reviews                     |        :x:         | Submit via Canvas                                            |
+| did not follow directions in repo submission                 |        :x:         |                                                              |
