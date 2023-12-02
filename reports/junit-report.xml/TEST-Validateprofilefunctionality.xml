@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<testsuites>
-<testsuite name="Validate profile functionality" errors="0" tests="3" failures="0" time="0.228" timestamp="2022-11-15T09:30:34">
-  <testcase classname="Validate profile functionality" name="log in user" time="0.058"></testcase>
-  <testcase classname="Validate profile functionality" name="update headline for logged in user" time="0.093"></testcase>
-  <testcase classname="Validate profile functionality" name="return headline for logged in user" time="0.077"></testcase>
-</testsuite>
-</testsuites>
